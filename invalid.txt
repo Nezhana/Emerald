@@ -1,0 +1,8 @@
+y = gets 
+if y >! 6 
+    x = y - 6 
+else 
+    x = y 
+end 
+puts x, y 
+puts 824 * x1 + 25.81 

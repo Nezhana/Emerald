@@ -1,0 +1,15 @@
+y = gets 
+if y > 6 
+    x = y - 6 
+elif y < 6 and y > 0 
+    x = 1 / y 
+else 
+    x = y 
+end 
+#x and y 
+puts x, y 
+ =begin 
+    comment line 1 
+    comment line 2 
+ =end 
+result = x * 2.47 * 1.4 <= 15 / ( 7 + y ) 
