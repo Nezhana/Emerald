@@ -44,6 +44,9 @@ class SyntaxAnalyzer():
             else:
                 self.parseAssign()
             return True
+        elif tok == 'onelinecom':
+            print('\t\t\tIn row {0} token {1}'.format(line_num, (lex, tok)))
+            return True
         #statement : ifstate
         elif (lex, tok) == ('if', 'keywords'):
             self.parseIf()
@@ -63,6 +66,37 @@ class SyntaxAnalyzer():
         else:
             self.failParse('parseStatement', f'unpredictable lexeme: {lex} {tok}')
             return False
+
+    def parseIf(self):
+        print('\t\t\tparseIf():')
+        line_num, lex, tok = self.getSymbol(self.rowInd)
+        self.rowInd += 1
+        try:
+            self.parseExpression()
+            if self.parseStatement():
+                pass
+            else:
+                return False
+            if self.parseToken('elif', 'keywords', '\t\t\t'):
+                self.parseExpression()
+                if self.parseStatement():
+                    pass
+                else:
+                    return False
+            else: pass
+            if self.parseToken('else', 'keywords', '\t\t\t'):
+                if self.parseStatement():
+                    pass
+                else:
+                    return False
+            else:
+                pass
+            if self.parseToken('end', 'keywords', '\t\t\t'):
+                return True
+            else:
+                return False
+        except:
+            pass
 
     def parseIndExpr(self):
         print('\t\t\tparseIndExpr():')
@@ -262,7 +296,7 @@ class SyntaxAnalyzer():
 
 
 def main():
-    with open('demo.txt', 'r') as my_code:
+    with open('demo_2.txt', 'r') as my_code:
         source_code = my_code.read()
     
     print('--- LEX ANALYZER ---')
