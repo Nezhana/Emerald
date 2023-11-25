@@ -230,15 +230,17 @@ class LexAnalyzer():
                     while lexeme[-1] != '\n':
                         symbol, symbol_counter = self.next_symbol(source_code, symbol_counter)
                         lexeme += symbol
-                    lexeme = lexeme.strip('\n')
+                    lexeme = lexeme.strip('\n').strip()
                     print('{0:<3d} {1:<20s} {2:<10s}'.format(line_counter, lexeme, 'startcom'))
+                    self.table_of_symbols[len(self.table_of_symbols)+1] = (line_counter, lexeme, 'startcom', '')
                     line_counter +=1
                 elif lexeme[1] == 'e':
                     while lexeme[-1] != '\n':
                         symbol, symbol_counter = self.next_symbol(source_code, symbol_counter)
                         lexeme += symbol
-                    lexeme = lexeme.strip('\n')
+                    lexeme = lexeme.strip('\n').strip()
                     print('{0:<3d} {1:<20s} {2:<10s}'.format(line_counter, lexeme, 'endcom'))
+                    self.table_of_symbols[len(self.table_of_symbols)+1] = (line_counter, lexeme, 'endcom', '')
                     line_counter +=1
                     symbol_counter -= 1
         if state in self.F_error:
