@@ -36,7 +36,7 @@ class SyntaxAnalyzer():
     def parseStatement(self):
         print('\t\t parseStatement():')
         line_num, lex, tok = self.getSymbol(self.rowInd)
-        #statement : assign | input
+        #statement : assign | input | index
         if tok == 'id':
             _, next_lex, next_tok = self.getSymbol(self.rowInd+1)
             if (next_lex, next_tok) == ('in', 'keywords'):
@@ -158,13 +158,21 @@ class SyntaxAnalyzer():
         self.parseIndExpr()
         self.rowInd += 1
         if self.parseToken('do', 'keywords', '\t\t\t\t'):
+            print('\t\t\tinner statement:')
             self.parseStatement()
-            self.rowInd += 1
             line_num, lex, tok = self.getSymbol(self.rowInd)
             if (lex, tok) == ('end', 'keywords'):
+                print('\t'*3 + 'In row {0} token {1}'.format(line_num, (lex, tok)))
+                self.rowInd += 1
+                return True
+            elif (lex, tok) == ('', 'EOF') and self.getSymbol(self.rowInd-1) == (10, 'end', 'keywords'):
+                self.rowInd -= 1
+                line_num, lex, tok = self.getSymbol(self.rowInd)
+                print('\t'*3 + 'In row {0} token {1}'.format(line_num, (lex, tok)))
+                self.rowInd += 1
                 return True
             else:
-                return False
+                self.failParse('parseFor()', 'end keyword was not founded.')
         else:
             return False
 
@@ -278,7 +286,6 @@ class SyntaxAnalyzer():
             self.rowInd += 1
             print('\t'*4 + 'In row {0} token {1}'.format(line_num, (lex, tok)))
         elif tok in ('id', 'intc', 'floatc'):
-            # self.rowInd += 1
             self.parseExpression()
         else:
             self.failParse('parseIdentList', f'token not an id or strc: {tok}')
