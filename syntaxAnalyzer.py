@@ -1,10 +1,14 @@
 import lexAnalyzer
+import semanticAnalyzer
 
 class SyntaxAnalyzer():
 
     def __init__(self, sym_table, rowIndex):
         self.table_of_symbols = sym_table
         self.rowInd = rowIndex
+        #{ id : (value, type) }
+        self.table_of_ids = {}
+        self.semantic = semanticAnalyzer.SemanticAnalyzer(sym_table)
 
     def getSymbol(self, rowInd):
         if self.rowInd > len(self.table_of_symbols):
@@ -179,12 +183,17 @@ class SyntaxAnalyzer():
     def parseAssign(self):
         print('\t\t\t parseAssign():')
         _, lex, tok = self.getSymbol(self.rowInd)
+        new_id = lex
+        if not self.semantic.check_id(new_id, self.table_of_ids):
+            print(f'reassign: {new_id}')
         self.rowInd += 1
         if self.parseToken('=', 'assignop', '\t\t\t\t'):
             #try parse Input
             try:
                 _, lex, tok = self.getSymbol(self.rowInd)
+                # self.table_of_ids[new_id] = (lex, tok)
                 if (lex, tok) == ('gets', 'keywords'):
+                    #input statement, temporary skip semantics
                     self.rowInd += 1
                     return True
                 else:

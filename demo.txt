@@ -7,6 +7,7 @@ puts 824 * x1 / 25.81
 puts x1 + 3 < 1 
 for j in 1 .. 5 do 
     for i in 1 .. 5 do 
-        print i , " "
-    end
+        print i , " " 
+    end 
 end 
+ 
