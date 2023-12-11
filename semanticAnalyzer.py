@@ -10,7 +10,7 @@ class SemanticAnalyzer():
         pass
 
     def check_id(self, new_id, table_of_ids):
-        if new_id in table_of_ids.keys():
+        if new_id in list(table_of_ids.keys()):
             return False
         else: return True
 

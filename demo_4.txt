@@ -1,3 +1,15 @@
-age = 16 
-x1 = 12 * age 
-x2 = 3 > 5 
+print "Enter your age: " 
+age = gets 
+puts age 
+puts 2 ** 4 
+x1 = 12 
+puts 824 * x1 / 25.81 
+puts x1 + 3 < 1 
+y = gets 
+if y > 6 
+    x = y - 6 
+elif y > 0 
+    x = 1 / y 
+else 
+    x = y 
+end 
