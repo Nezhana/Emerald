@@ -522,6 +522,9 @@ def main():
     print()
     print(f'- tableOfLabel -\n{tableOfLabel}')
 
+    print()
+    print(f'- RPN table -\n{postfixCode}')
+
 
 if __name__ == "__main__":
     main()
