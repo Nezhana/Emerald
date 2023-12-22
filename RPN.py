@@ -189,11 +189,11 @@ class SyntaxAnalyzer():
         self.rowInd += 1
         line_num, lex, tok = self.getSymbol(self.rowInd)
         postfixCode.append((lex, 'for-id'))
-        postfixCode.append(('=', 'assignop'))
         print('\t'*3 + 'In row {0} token {1}'.format(line_num, (lex, tok)))
         # 
         range_expr = self.parseIndExpr()
         postfixCodeGen('start-for', range_expr['start'])
+        postfixCode.append(('=', 'assignop'))
 
         r1 = 1
         postfixCode.append((r1, 'r1'))
@@ -221,9 +221,9 @@ class SyntaxAnalyzer():
         
         postfixCodeGen('target-for', range_expr['target'])
         postfixCode.append((lex, 'for-id'))
-        postfixCode.append(('-', ''))
+        postfixCode.append(('-', 'addop'))
         postfixCode.append(('0', 'condition'))
-        postfixCode.append(('<', ''))
+        postfixCode.append(('<', 'relop'))
 
         self.rowInd += 1
         if self.parseToken('do', 'keywords', '\t\t\t\t'):
@@ -280,6 +280,7 @@ class SyntaxAnalyzer():
                     #input statement, temporary skip semantics
                     self.table_of_ids[new_id] = (lex, 'input')
                     postfixCodeGen('rval', (lex, 'input'))
+                    postfixCodeGen('=',('=','assignop'))
                     print('\t'*5 + 'In row {0} token {1}'.format(line_num, (lex, tok)))
                     self.rowInd += 1
                     return True
@@ -425,7 +426,6 @@ class SyntaxAnalyzer():
     def parseOutput(self):
         print('\t\t\t parseOutput():')
         line_num, lex, tok = self.getSymbol(self.rowInd)
-        postfixCodeGen('lval', (lex, 'output'))
         self.rowInd += 1
         self.parseIdentList()
         F = True
@@ -437,6 +437,7 @@ class SyntaxAnalyzer():
                 self.parseIdentList()
             else:
                 F = False
+        postfixCodeGen('output', (lex, 'output'))
         return True
 
     def failParse(self, func, details='nothing.'):
@@ -469,6 +470,9 @@ def postfixCodeGen(case, toTran):
     elif case == 'target-for':
         lex,tok = toTran
         postfixCode.append((lex,'target-for'))
+    elif case == 'output':
+        lex,tok = toTran
+        postfixCode.append((lex,'output'))
     else:
         lex,tok = toTran
         postfixCode.append((lex,tok))
@@ -493,38 +497,38 @@ def setValLabel(lbl):
     tableOfLabel[lex] = len(postfixCode) + 1
     return True
 
-def main():
-    with open('demo.txt', 'r') as my_code:
-        source_code = my_code.read()
+# def main():
+#     with open('demo.txt', 'r') as my_code:
+#         source_code = my_code.read()
     
-    print('--- LEX ANALYZER ---')
-    lexer = lexAnalyzer.LexAnalyzer()
-    table_of_symbols = lexer.lex_analyser(source_code)
-    print()
+#     print('--- LEX ANALYZER ---')
+#     lexer = lexAnalyzer.LexAnalyzer()
+#     table_of_symbols = lexer.lex_analyser(source_code)
+#     print()
 
-    ind = list(table_of_symbols.keys())[-1] + 1
-    table_of_symbols[ind] = (1, '', 'EOF', '')
+#     ind = list(table_of_symbols.keys())[-1] + 1
+#     table_of_symbols[ind] = (1, '', 'EOF', '')
     
-    print('--- SYNTAX ANALYZER ---')
-    syntaxAnalyzer = SyntaxAnalyzer(table_of_symbols, 1)
-    syntaxAnalyzer.parseProgram()
+#     print('--- SYNTAX ANALYZER ---')
+#     syntaxAnalyzer = SyntaxAnalyzer(table_of_symbols, 1)
+#     syntaxAnalyzer.parseProgram()
 
-    print()
-    print(f'- table_of_ids -\n{syntaxAnalyzer.table_of_ids}')
-    print()
+#     print()
+#     print(f'- table_of_ids -\n{syntaxAnalyzer.table_of_ids}')
+#     print()
 
-    print('--- RPN: postfixCode ---')
-    counter = 0
-    for lex, tok in postfixCode:
-        counter += 1
-        print(f'{counter}: {lex} {tok}')
+#     print('--- RPN: postfixCode ---')
+#     counter = 0
+#     for lex, tok in postfixCode:
+#         counter += 1
+#         print(f'{counter}: {lex} {tok}')
 
-    print()
-    print(f'- tableOfLabel -\n{tableOfLabel}')
+#     print()
+#     print(f'- tableOfLabel -\n{tableOfLabel}')
 
-    print()
-    print(f'- RPN table -\n{postfixCode}')
+#     print()
+#     print(f'- RPN table -\n{postfixCode}')
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()

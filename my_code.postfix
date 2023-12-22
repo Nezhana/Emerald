@@ -1,0 +1,116 @@
+.target: Postfix Machine
+.version: 0.2
+
+.vars(
+    age	input
+    x1	intc
+    j	intc
+    i	intc
+)
+
+.labels(
+    m1	32
+    m2	40
+    m3	81
+    m4	54
+    m5	62
+    m6	77
+)
+
+.constants(
+    "Enter your age: "	strc
+    2	intc
+    4	intc
+    12	intc
+    824	intc
+    25.81	floatc
+    3	intc
+    1	intc
+    5	intc
+    " "	strc
+)
+
+.code(
+    "Enter your age: "	r-val
+    age	output
+    age	l-val
+    gets	r-val
+    =	assignop
+    age	r-val
+    puts	output
+    2	intc
+    4	intc
+    **	powerop
+    x1	output
+    x1	l-val
+    12	intc
+    =	assignop
+    824	intc
+    x1	r-val
+    *	multop
+    25.81	floatc
+    /	multop
+    puts	output
+    x1	r-val
+    3	intc
+    +	addop
+    1	intc
+    <	relop
+    for	output
+    j	for-id
+    1	start-for
+    =	assignop
+    1	r1
+    m1	label
+    :	colon
+    1	step-for
+    m2	label
+    JF	jf
+    j	for-id
+    1	step-for
+    =	assignop
+    m2	label
+    :	colon
+    0	r1
+    5	target-for
+    j	for-id
+    -	addop
+    0	condition
+    <	relop
+    m3	label
+    JF	jf
+    i	for-id
+    1	start-for
+    =	assignop
+    1	r1
+    m4	label
+    :	colon
+    1	step-for
+    m5	label
+    JF	jf
+    i	for-id
+    1	step-for
+    =	assignop
+    m5	label
+    :	colon
+    0	r1
+    5	target-for
+    i	for-id
+    -	addop
+    0	condition
+    <	relop
+    m6	label
+    JF	jf
+    i	r-val
+    " "	r-val
+    end	output
+    m4	label
+    JMP	jump
+    m6	label
+    :	colon
+    m1	label
+    JMP	jump
+    m3	label
+    :	colon
+)
+
