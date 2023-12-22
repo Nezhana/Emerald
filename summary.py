@@ -1,10 +1,12 @@
 import lexAnalyzer
-import semanticAnalyzer
+# import semanticAnalyzer
 import RPN
+from postfixMachine import PSM
 
 
-def main():
-    with open('demo.txt', 'r') as my_code:
+def main(demo_name):
+    filename = f'{demo_name}.txt'
+    with open(filename, 'r') as my_code:
         source_code = my_code.read()
     
     print('--- LEX ANALYZER ---')
@@ -35,11 +37,22 @@ def main():
     print()
     print(f'- RPN table -\n{RPN.postfixCode}')
 
-    savePostfixCode(syntaxAnalyzer.table_of_ids, RPN.tableOfLabel, lexer.table_of_constants, RPN.postfixCode)
+    savePostfixCode(demo_name, syntaxAnalyzer.table_of_ids, RPN.tableOfLabel, lexer.table_of_constants, RPN.postfixCode)
+
+    pm1=PSM() 
+    pm1.loadPostfixFile(demo_name)  #  завантаження .postfix - файла
+
+    pm1.postfixExec()
+
+    print()
+    print(f'--- Table of ID ---\n{pm1.tableOfId}\n\n--- Table of label ---\n{pm1.tableOfLabel}')
+    print(f'\n--- Table of const ---\n{pm1.tableOfConst}\n\n--- Postfix code ---\n{pm1.postfixCode}')
+    print(f'\n--- Map Debug ---\n{pm1.mapDebug}')
 
 
-def savePostfixCode(table_of_ids, tableOfLabel, table_of_constants, postfixCode):
-    with open('my_code.postfix', 'w') as my_code:
+def savePostfixCode(demo_name, table_of_ids, tableOfLabel, table_of_constants, postfixCode):
+    filename = f'{demo_name}.postfix'
+    with open(filename, 'w') as my_code:
         my_code.write('.target: Postfix Machine\n')
         my_code.write('.version: 0.2\n\n')
 
@@ -65,4 +78,5 @@ def savePostfixCode(table_of_ids, tableOfLabel, table_of_constants, postfixCode)
 
 
 if __name__ == "__main__":
-    main()
+    demo_name = 'demo_2'
+    main(demo_name)

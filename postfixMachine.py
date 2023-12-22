@@ -157,23 +157,21 @@ class PSM():             # Postfix Stack Machine
         self.maxNumbInstr = len(self.postfixCode)
         try:
             while self.numInstr < self.maxNumbInstr:
-                print(f'{self.numInstr} {self.maxNumbInstr}')
                 self.stack.print()
                 lex, tok = self.postfixCode[self.numInstr]
                 if tok in ('intc', 'floatc', 'l-val', 'r-val', 'label', 'boolc', 'strc', 'for-id', 'start-for', 'step-for', 'target-for', 'condition'):
                     if (lex, tok) == ('gets', 'r-val'):
                         prev_id, _ =  self.postfixCode[self.numInstr-1]
                         val = input(f'Enter a value for {prev_id}: ')
-                        try:
+                        if val.isnumeric():
                             val = int(val)
                             tok = 'intc'
-                        except:
-                            pass
-                        try:
-                            val = float(val)
-                            tok = 'floatc'
-                        except:
-                            pass
+                        else:
+                            try:
+                                val = float(val)
+                                tok = 'floatc'
+                            except:
+                                pass
                         if val in ('true', 'false'):
                             tok = 'boolc'
                         self.stack.push((val, tok))
@@ -213,12 +211,15 @@ class PSM():             # Postfix Stack Machine
             lexLbl, _ = self.stack.pop()                 # зняти з вершини стека мітку
             self.numInstr = int(self.tableOfLabel[lexLbl])    # номер наступної інструкції = значення мітки
         elif tok =='colon':
-            _, _  = self.stack.pop()                       # зняти з вершини стека 
-            self.numInstr = self.numInstr +1          # непотрібну нам мітку
-        elif tok =='jf':
+            try:
+                _, _  = self.stack.pop()              # зняти з вершини стека непотрібну нам мітку
+            except:
+                pass
+            self.numInstr = self.numInstr +1
+        elif tok in ('jf', 'jff'):
             lexLbl, _ = self.stack.pop()                   # зняти з вершини стека мітку
             valBoolExpr, _ = self.stack.pop()              # зняти з вершини стека значення BoolExpr
-            if valBoolExpr=='false':
+            if valBoolExpr == 'false':
                 self.numInstr = int(self.tableOfLabel[lexLbl])
             else:
                 self.numInstr = self.numInstr + 1
@@ -287,14 +288,11 @@ class PSM():             # Postfix Stack Machine
         elif tok == 'boolc':
             val = lex
             type = tok
-        elif tok == 'target-for':
+        elif tok in ('target-for', 'step-for', 'condition'):
             val = int(lex)
             type = 'intc'
         elif tok == 'for-id':
             val = int(self.tableOfId[lex][2])
-            type = 'intc'
-        elif tok == 'condition':
-            val = int(lex)
             type = 'intc'
         return (type, val)
 
@@ -324,7 +322,8 @@ class PSM():             # Postfix Stack Machine
         elif arthBoolOp == '/' and typeL == 'floatc':
             value = valL / valR
         elif arthBoolOp == '/' and typeL == 'intc':
-            value = int(valL / valR)
+            typeL = 'floatc'
+            value = float(valL / valR)
         elif arthBoolOp == '<':
             value = str(valL < valR).lower()
         elif arthBoolOp == '<=':
@@ -350,23 +349,23 @@ class PSMExcept(Exception):
     def __init__(self,msg):
         self.msg = msg
 
+# pm1=PSM() 
+# pm1.loadPostfixFile("demo_2")  #  завантаження .postfix - файла
 
-    
-pm1=PSM() 
-pm1.loadPostfixFile("my_code")  #  завантаження .postfix - файла
+# pm1.postfixExec()
 
-pm1.postfixExec()
-
-print()
-print(f'--- Table of ID ---\n{pm1.tableOfId}\n\n--- Table of label ---\n{pm1.tableOfLabel}\n\n--- Table of const ---\n{pm1.tableOfConst}\n\n--- Postfix code ---\n{pm1.postfixCode}')
+# print()
+# print(f'--- Table of ID ---\n{pm1.tableOfId}\n\n--- Table of label ---\n{pm1.tableOfLabel}')
+# print(f'\n--- Table of const ---\n{pm1.tableOfConst}\n\n--- Postfix code ---\n{pm1.postfixCode}')
+# print(f'\n--- Map Debug ---\n{pm1.mapDebug}')
 
 # print(f"pm1.tableOfId:\n  {pm1.tableOfId}\n")
 # print(f"pm1.tableOfLabel:\n  {pm1.tableOfLabel}\n")
 # print(f"pm1.tableOfConst:\n  {pm1.tableOfConst}\n")
 # print(f"pm1.postfixCode:\n  {pm1.postfixCode}\n")
 
-for i in range(0,len(pm1.postfixCode)):
-    s = "{0:4}  {1:4}   {2}".format(i, pm1.mapDebug[i], pm1.postfixCode[i])
-    print(s) 
+# for i in range(0,len(pm1.postfixCode)):
+#     s = "{0:4}  {1:4}   {2}".format(i, pm1.mapDebug[i], pm1.postfixCode[i])
+#     print(s) 
 
-print(f"pm1.mapDebug:\n  {pm1.mapDebug}\n")
+# print(f"pm1.mapDebug:\n  {pm1.mapDebug}\n")

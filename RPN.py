@@ -1,4 +1,4 @@
-import lexAnalyzer
+# import lexAnalyzer
 import semanticAnalyzer
 
 class SyntaxAnalyzer():
@@ -99,12 +99,17 @@ class SyntaxAnalyzer():
             postfixCode.append(m1)
             postfixCode.append(('JF', 'jf'))
             if self.parseStatement():
-                pass
+                m2 = createLabel()
+                m3 = createLabel()
+                postfixCode.append(m3)
+                postfixCode.append(('JMP', 'jump'))
+                postfixCode.append(m1)
+                postfixCode.append((':','colon'))
             else:
                 return False
             if self.parseToken('elif', 'keywords', '\t\t\t'):
                 self.parseExpression()
-                m2 = createLabel()
+                # m2 = createLabel()
                 postfixCode.append(m2)
                 postfixCode.append(('JFF', 'jff'))
                 setValLabel(m1)
@@ -116,7 +121,7 @@ class SyntaxAnalyzer():
                     return False
             else: pass
             if self.parseToken('else', 'keywords', '\t\t\t'):
-                m3 = createLabel()
+                # m3 = createLabel()
                 postfixCode.append(m3)
                 postfixCode.append(('JMP', 'jump'))
                 setValLabel(m2)
@@ -209,7 +214,9 @@ class SyntaxAnalyzer():
         postfixCode.append(('JF','jf'))
 
         postfixCode.append((lex, 'for-id'))
+        postfixCode.append((lex, 'for-id'))
         postfixCodeGen('step-for', range_expr['step'])
+        postfixCode.append(('+', 'addop'))
         postfixCode.append(('=', 'assignop'))
 
         postfixCode.append(m2)
@@ -223,7 +230,7 @@ class SyntaxAnalyzer():
         postfixCode.append((lex, 'for-id'))
         postfixCode.append(('-', 'addop'))
         postfixCode.append(('0', 'condition'))
-        postfixCode.append(('<', 'relop'))
+        postfixCode.append(('>', 'relop'))
 
         self.rowInd += 1
         if self.parseToken('do', 'keywords', '\t\t\t\t'):

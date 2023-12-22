@@ -1,6 +1,11 @@
-puts x, y 
- =begin 
-    comment line 1 
-    comment line 2 
- =end 
-result = x * 2.47 * 1.4 <= 15 / ( 7 + y ) 
+print "Enter your age: " 
+age = gets 
+puts age 
+puts 2 ** 4 
+x1 = 12 
+puts 824 * x1 / 25.81 
+puts x1 + 3 < 1 
+ for i in 1 .. 5 do 
+    print i , " " 
+ end 
+ 
