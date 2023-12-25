@@ -78,5 +78,5 @@ def savePostfixCode(demo_name, table_of_ids, tableOfLabel, table_of_constants, p
 
 
 if __name__ == "__main__":
-    demo_name = 'demo_2'
+    demo_name = 'demo_3'
     main(demo_name)

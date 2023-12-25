@@ -237,19 +237,25 @@ class PSM():             # Postfix Stack Machine
             if tokL != tokR:
                 if tokL == 'intc':
                     try:
-                        lexR = int(lexR)
-                        tokR = 'intc'
-                        self.tableOfId[lexL] = (self.tableOfId[lexL][0], tokR, getValue(lexR, tokR))
+                        if tokR == 'floatc':
+                            self.tableOfId[lexL] = (self.tableOfId[lexL][0], tokR, getValue(lexR, tokR))
+                        else:
+                            lexR = int(lexR)
+                            tokR = 'intc'
+                            self.tableOfId[lexL] = (self.tableOfId[lexL][0], tokR, getValue(lexR, tokR))
                     except:
                         raise PSMExcept(7)
                 elif tokL == 'floatc':
                     try:
-                        lexR = float(lexR)
-                        tokR = 'floatc'
-                        self.tableOfId[lexL] = (self.tableOfId[lexL][0], tokR, getValue(lexR, tokR))
+                        if tokR == 'intc':
+                            self.tableOfId[lexL] = (self.tableOfId[lexL][0], tokR, getValue(lexR, tokR))
+                        else:
+                            lexR = float(lexR)
+                            tokR = 'floatc'
+                            self.tableOfId[lexL] = (self.tableOfId[lexL][0], tokR, getValue(lexR, tokR))
                     except:
                         raise PSMExcept(7)
-                elif tokL == 'input':
+                elif tokL in ('input', 'l-val'):
                     tokL = tokR
                     self.tableOfId[lexL] = (self.tableOfId[lexL][0], tokR, getValue(lexR, tokR))
                 else:

@@ -1,11 +1,9 @@
-print "Enter your age: " 
-age = gets 
-puts age 
-puts 2 ** 4 
-x1 = 12 
-puts 824 * x1 / 25.81 
-puts x1 + 3 < 1 
- for i in 1 .. 5 do 
-    print i , " " 
- end 
- 
+x1 = 12
+y = gets
+if y > 6
+   x1 = x1 * 2
+elif y < 6
+   x1 = x1 / 2
+else
+   x1 = 0
+end
